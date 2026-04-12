@@ -14,16 +14,3 @@
 ✅ **Multi-plateforme** - Web + Mobile Android  
 ✅ **Multilingue** - FR, EN, ES et plus  
 ✅ **Sécurité entreprise** - JWT, 2FA, chiffrement  
-
-## 🚀 Quick Start
-
-```bash
-# Cloner & installer
-git clone https://github.com/Avir78/US-High-LMS.git
-cd US-High-LMS
-
-# Backend
-cd backend && npm install && npm run dev
-
-# Frontend (nouveau terminal)
-cd frontend && npm install && npm run dev
