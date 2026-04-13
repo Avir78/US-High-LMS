@@ -1,1 +1,6 @@
-
+git init
+git branch -M main
+git add .
+git commit -m "Initial project setup: US High LMS - Educational LMS with Business Simulation"
+git remote add origin https://github.com/Avir78/US-High-LMS.git
+git push -u origin main
