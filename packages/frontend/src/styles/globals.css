@@ -1,0 +1,78 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+
+/* Smooth animations */
+* {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+body {
+  @apply bg-gray-50 text-gray-900 font-sans;
+}
+
+/* Button Base Styles */
+.btn-base {
+  @apply px-4 py-2 rounded-lg font-semibold transition duration-200;
+}
+
+.btn-primary {
+  @apply btn-base bg-primary-600 text-white hover:bg-primary-700 shadow-md hover:shadow-lg;
+}
+
+.btn-secondary {
+  @apply btn-base bg-secondary-600 text-white hover:bg-secondary-700 shadow-md hover:shadow-lg;
+}
+
+.btn-outline {
+  @apply btn-base border-2 border-primary-600 text-primary-600 hover:bg-primary-50;
+}
+
+/* Card Styles */
+.card {
+  @apply bg-white rounded-lg shadow-md hover:shadow-lg transition p-6;
+}
+
+.card-hover {
+  @apply card hover:border-primary-500 border-2 border-transparent;
+}
+
+/* Gradient Text */
+.gradient-text {
+  @apply bg-gradient-to-r from-primary-600 to-secondary-600 bg-clip-text text-transparent;
+}
+
+/* Form Inputs */
+input,
+textarea,
+select {
+  @apply border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent;
+}
+
+input::placeholder {
+  @apply text-gray-400;
+}
+
+/* Loading Spinner */
+.spinner {
+  @apply inline-block w-4 h-4 border-2 border-gray-300 border-t-primary-600 rounded-full animate-spin;
+}
