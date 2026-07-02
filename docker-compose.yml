@@ -1,0 +1,91 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: us_high_lms_db
+    environment:
+      POSTGRES_USER: ${DB_USER:-lms_user}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-lms_password}
+      POSTGRES_DB: ${DB_NAME:-us_high_lms_dev}
+    ports:
+      - '5432:5432'
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./packages/backend/src/database/migrations:/docker-entrypoint-initdb.d
+    networks:
+      - lms_network
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U ${DB_USER:-lms_user}']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis Cache (optional, for sessions/caching)
+  redis:
+    image: redis:7-alpine
+    container_name: us_high_lms_cache
+    ports:
+      - '6379:6379'
+    networks:
+      - lms_network
+    healthcheck:
+      test: ['CMD', 'redis-cli', 'ping']
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Backend API
+  backend:
+    build:
+      context: ./packages/backend
+      dockerfile: Dockerfile
+    container_name: us_high_lms_api
+    environment:
+      NODE_ENV: development
+      DATABASE_URL: postgresql://${DB_USER:-lms_user}:${DB_PASSWORD:-lms_password}@postgres:5432/${DB_NAME:-us_high_lms_dev}
+      REDIS_URL: redis://redis:6379
+      JWT_SECRET: ${JWT_SECRET}
+      PORT: 5000
+    ports:
+      - '5000:5000'
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    volumes:
+      - ./packages/backend:/app
+      - /app/node_modules
+    networks:
+      - lms_network
+    command: npm run dev
+
+  # Frontend (Development)
+  frontend:
+    build:
+      context: ./packages/frontend
+      dockerfile: Dockerfile.dev
+    container_name: us_high_lms_web
+    environment:
+      REACT_APP_API_URL: http://localhost:5000
+      REACT_APP_ENV: development
+    ports:
+      - '3000:3000'
+    depends_on:
+      - backend
+    volumes:
+      - ./packages/frontend:/app
+      - /app/node_modules
+    networks:
+      - lms_network
+    command: npm start
+
+volumes:
+  postgres_data:
+    driver: local
+
+networks:
+  lms_network:
+    driver: bridge
